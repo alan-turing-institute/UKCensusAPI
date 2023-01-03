@@ -8,6 +8,7 @@ import urllib.parse
 import zipfile
 import pandas as pd
 import requests
+import subprocess
 
 import ukcensusapi.utils as utils
 
@@ -142,9 +143,15 @@ class NRScotland:
 
     if not os.path.exists(os.path.join(str(self.cache_dir), table + ".csv")):
       print("Downloading...")
-      with zipfile.ZipFile(str(self.__source_to_zip(self.data_sources[self.GeoCodeLookup[resolution]]))) as zip_ref:
-        print("Extracting downloaded zip...")
-        zip_ref.extractall()
+      try:
+        zf = str(self.__source_to_zip(self.data_sources[self.GeoCodeLookup[resolution]]))
+        print("File saved to: ", zf)
+        with zipfile.ZipFile(zf) as zip_ref:
+          print("Extracting downloaded zip...")
+          zip_ref.extractall()
+      except NotImplementedError as e:
+        print("Unsupported zip type... running unzip via shell...")
+        subprocess.run(['unzip', zf])
     raw_data = pd.read_csv(os.path.join(str(self.cache_dir), table + ".csv"))
     # more sophisticate way to check for no data?
     if raw_data.shape == (2,1):
