@@ -141,8 +141,9 @@ class NRScotland:
     """
 
     if not os.path.exists(os.path.join(str(self.cache_dir), table + ".csv")):
-      _ = zipfile.ZipFile(str(self.__source_to_zip(NRScotland.data_sources[NRScotland.GeoCodeLookup[resolution]])))
-      with zipfile.ZipFile(os.path.join(str(self.cache_dir), table + ".csv"),"r") as zip_ref:
+      zf = zipfile.ZipFile(str(self.__source_to_zip(NRScotland.data_sources[NRScotland.GeoCodeLookup[resolution]])))
+      with zipfile.ZipFile(zf,"r") as zip_ref:
+        print("Extracting downloaded zip...")
         zip_ref.extractall()
     raw_data = pd.read_csv(os.path.join(str(self.cache_dir), table + ".csv"))
     # more sophisticate way to check for no data?
