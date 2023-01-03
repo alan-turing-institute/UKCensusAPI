@@ -151,7 +151,7 @@ class NRScotland:
           zip_ref.extractall()
       except NotImplementedError as e:
         print("Unsupported zip type... running unzip via shell...")
-        subprocess.run(['unzip', zf])
+        subprocess.run(['unzip', zf, '-d', str(self.cache_dir)])
     raw_data = pd.read_csv(os.path.join(str(self.cache_dir), table + ".csv"))
     # more sophisticate way to check for no data?
     if raw_data.shape == (2,1):
