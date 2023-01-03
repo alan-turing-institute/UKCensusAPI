@@ -141,9 +141,8 @@ class NRScotland:
     """
 
     if not os.path.exists(os.path.join(str(self.cache_dir), table + ".csv")):
-      zf = zipfile.ZipFile(str(self.__source_to_zip(self.data_sources[self.GeoCodeLookup[resolution]])))
-      print("File saved to: ", zf)
-      with zipfile.ZipFile(zf,"r") as zip_ref:
+      print("Downloading...")
+      with zipfile.ZipFile(str(self.__source_to_zip(self.data_sources[self.GeoCodeLookup[resolution]]))) as zip_ref:
         print("Extracting downloaded zip...")
         zip_ref.extractall()
     raw_data = pd.read_csv(os.path.join(str(self.cache_dir), table + ".csv"))
