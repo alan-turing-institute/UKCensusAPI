@@ -141,7 +141,8 @@ class NRScotland:
     """
 
     if not os.path.exists(os.path.join(str(self.cache_dir), table + ".csv")):
-      zf = zipfile.ZipFile(str(self.__source_to_zip(NRScotland.data_sources[NRScotland.GeoCodeLookup[resolution]])))
+      zf = zipfile.ZipFile(str(self.__source_to_zip(self.data_sources[self.GeoCodeLookup[resolution]])))
+      print("File saved to: ", zf)
       with zipfile.ZipFile(zf,"r") as zip_ref:
         print("Extracting downloaded zip...")
         zip_ref.extractall()
@@ -272,9 +273,9 @@ class NRScotland:
     headers = {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:92.0) Gecko/20100101 Firefox/92.0'}
     if not os.path.isfile(str(zip)):
       if source_name.split()[0] == 'Council':
-        scotland_src = NRScotland.URL1 + "media/hjmd0oqr/" + source_name.lower().replace(" ", "-") + ".zip"
+        scotland_src = self.URL1 + "media/hjmd0oqr/" + source_name.lower().replace(" ", "-") + ".zip"
       else:
-        scotland_src = NRScotland.URL2 + urllib.parse.quote(source_name) + ".zip"
+        scotland_src = self.URL2 + urllib.parse.quote(source_name) + ".zip"
       response = requests.get(scotland_src, headers=headers)
       response.raise_for_status()
       with open(str(zip), 'wb') as fd:
