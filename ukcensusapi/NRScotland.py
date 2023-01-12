@@ -195,7 +195,7 @@ class NRScotland:
       msoa_workaround = True
       resolution = "LSOA11"
 
-    geography = self.get_geog(coverage, resolution)
+    geography = self.get_geog(coverage, "LAD")
     meta, raw_data = self.__get_rawdata(table, resolution)
     # Clean up the mess:
     # - some csv files contain numbers with comma thousands separators (!)
@@ -238,8 +238,8 @@ class NRScotland:
     # If we actually requested MSOA-level data, aggregrate the LSOAs within each MSOA
     if msoa_workaround:
       data = data.reset_index(drop=True)
-      lookup = self.area_lookup[self.area_lookup.LSOA11.isin(data.GEOGRAPHY_CODE)]
-      lookup = pd.Series(lookup.MSOA11.values, index=lookup.LSOA11).to_dict()
+      lookup = self.area_lookup[self.area_lookup.LAD.isin(data.GEOGRAPHY_CODE)]
+      lookup = pd.Series(lookup.MSOA11.values, index=lookup.LAD).to_dict()
       data.GEOGRAPHY_CODE = data.GEOGRAPHY_CODE.map(lookup)
       cols = list(data.columns[:-1]) #[1:]#.remove("GEOGRAPHY_CODE")
       data = data.groupby(cols).sum().reset_index()
