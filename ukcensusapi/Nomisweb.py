@@ -92,7 +92,7 @@ class Nomisweb:
   }
 
   # initialise, supplying a location to cache downloads
-  def __init__(self, cache_dir, verbose=False):
+  def __init__(self, cache_dir, verbose=True):
     """Constructor.
     Args:
         cache_dir: cache directory
