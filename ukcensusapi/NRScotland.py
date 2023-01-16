@@ -148,10 +148,12 @@ class NRScotland:
         print("File saved to: ", zf)
         with zipfile.ZipFile(zf) as zip_ref:
           print("Extracting downloaded zip...")
-          zip_ref.extractall(zf.rsplit('/',1)[0])
+          zip_ref.extractall(str(self.cache_dir))
       except NotImplementedError as e:
         print("Unsupported zip type... running unzip via shell...")
         subprocess.run(['unzip', zf, '-d', str(self.cache_dir)])
+    else:
+      print("Data already chached at: " + str(os.path.join(str(self.cache_dir), table + ".csv")))
     raw_data = pd.read_csv(os.path.join(str(self.cache_dir), table + ".csv"))
     # more sophisticate way to check for no data?
     if raw_data.shape == (2,1):
