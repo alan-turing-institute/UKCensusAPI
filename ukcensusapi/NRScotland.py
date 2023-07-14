@@ -141,7 +141,9 @@ class NRScotland:
     Gets the raw csv data and metadata
     """
 
-    if not os.path.exists(os.path.join(str(self.cache_dir), table + ".csv")):
+    # TODO: add complete fix to check any cached data is exactly at resolution required.
+    # Added initial NO_CACHE workaround to avoid relying on incomplete data already cached.
+    if not os.path.exists(os.path.join(str(self.cache_dir), table + ".csv")) or os.environ.get('NO_CACHE', "false") == "true":
       print("Downloading...")
       try:
         zf = str(self.__source_to_zip(self.data_sources[self.GeoCodeLookup[resolution]]))
@@ -151,9 +153,8 @@ class NRScotland:
           zip_ref.extractall(str(self.cache_dir))
       except NotImplementedError as e:
         print("Unsupported zip type... running unzip via shell...")
-        subprocess.run(['unzip', zf, '-d', str(self.cache_dir)])
-    else:
-      print("Data already chached at: " + str(os.path.join(str(self.cache_dir), table + ".csv")))
+        subprocess.run(['unzip', '-o', zf, '-d', str(self.cache_dir)])
+
     raw_data = pd.read_csv(os.path.join(str(self.cache_dir), table + ".csv"))
     # more sophisticate way to check for no data?
     if raw_data.shape == (2,1):
